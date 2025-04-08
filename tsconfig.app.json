@@ -1,0 +1,10 @@
+{
+  "extends": "./tsconfig.json",
+  "include": ["env.d.ts", "src"],
+  "compilerOptions": {
+    "composite": true,
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "types": ["node"]
+  }
+}
