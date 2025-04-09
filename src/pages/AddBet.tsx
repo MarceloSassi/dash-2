@@ -71,7 +71,7 @@ const AddBet: React.FC = () => {
 
   return (
     <Container maxWidth="md">
-      <Box sx={{ py: 3 }}>
+      <Box sx={{ py: 2 }}>
         <Typography variant="h4" component="h1" gutterBottom>
           Nova Aposta
         </Typography>

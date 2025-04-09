@@ -66,7 +66,7 @@ const ActiveBets: React.FC = () => {
   };
 
   return (
-    <Box sx={{ p: 3 }}>
+    <Box sx={{ p: 2 }}>
       <Typography variant="h4" component="h1" gutterBottom>
         Apostas Ativas
       </Typography>

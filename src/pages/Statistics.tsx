@@ -135,7 +135,7 @@ const Statistics: React.FC = () => {
   };
 
   return (
-    <Container maxWidth="xl" sx={{ py: 2 }}>
+    <Container maxWidth="xl" sx={{ py: 1 }}>
       <Box sx={{ mb: 2 }}>
         <Typography variant="h4" component="h1" gutterBottom>
           Estatísticas
