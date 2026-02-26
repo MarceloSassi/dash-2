@@ -16,7 +16,15 @@ import {
   ListItemText,
   Divider,
   Paper,
+  IconButton,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
+  Button,
 } from '@mui/material';
+import { Delete as DeleteIcon } from '@mui/icons-material';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
@@ -29,8 +37,12 @@ const History: React.FC = () => {
   const [endDate, setEndDate] = useState<Date | null>(null);
   const [selectedSport, setSelectedSport] = useState<Sport | 'All'>('All');
   const [selectedStatus, setSelectedStatus] = useState<BetStatus | 'All'>('All');
+  const [selectedBetType, setSelectedBetType] = useState<string>('All');
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [betToDelete, setBetToDelete] = useState<string | null>(null);
 
   const allBets = useBetStore((state) => state.bets);
+  const deleteBet = useBetStore((state) => state.deleteBet);
   const completedBets = allBets.filter((bet) => bet.status !== 'Pending');
 
   const handleSportChange = (event: SelectChangeEvent) => {
@@ -41,13 +53,35 @@ const History: React.FC = () => {
     setSelectedStatus(event.target.value as BetStatus | 'All');
   };
 
+  const handleBetTypeChange = (event: SelectChangeEvent) => {
+    setSelectedBetType(event.target.value as string);
+  };
+
+  const handleOpenDeleteDialog = (betId: string) => {
+    setBetToDelete(betId);
+    setDeleteDialogOpen(true);
+  };
+
+  const handleCloseDeleteDialog = () => {
+    setDeleteDialogOpen(false);
+    setBetToDelete(null);
+  };
+
+  const handleConfirmDelete = () => {
+    if (betToDelete) {
+      deleteBet(betToDelete);
+      handleCloseDeleteDialog();
+    }
+  };
+
   const filteredBets = completedBets.filter((bet) => {
     const dateMatch =
       (!startDate || bet.date >= startDate) &&
       (!endDate || bet.date <= endDate);
     const sportMatch = selectedSport === 'All' || bet.sport === selectedSport;
     const statusMatch = selectedStatus === 'All' || bet.status === selectedStatus;
-    return dateMatch && sportMatch && statusMatch;
+    const betTypeMatch = selectedBetType === 'All' || bet.betType === selectedBetType;
+    return dateMatch && sportMatch && statusMatch && betTypeMatch;
   });
 
   const getStatusColor = (status: BetStatus) => {
@@ -139,6 +173,24 @@ const History: React.FC = () => {
                 <MenuItem value="Lost">Perdeu</MenuItem>
               </Select>
             </FormControl>
+            <FormControl fullWidth>
+              <InputLabel>Tipo de Aposta</InputLabel>
+              <Select
+                value={selectedBetType}
+                label="Tipo de Aposta"
+                onChange={handleBetTypeChange}
+              >
+                <MenuItem value="All">Todos os Tipos</MenuItem>
+                <MenuItem value="Resultado">Resultado</MenuItem>
+                <MenuItem value="Gols">Gols</MenuItem>
+                <MenuItem value="Handicap">Handicap</MenuItem>
+                <MenuItem value="Escanteios">Escanteios</MenuItem>
+                <MenuItem value="Cartões">Cartões</MenuItem>
+                <MenuItem value="Jogadores">Jogadores</MenuItem>
+                <MenuItem value="Por Tempo">Por Tempo</MenuItem>
+                <MenuItem value="Especiais">Especiais</MenuItem>
+              </Select>
+            </FormControl>
           </Box>
         </CardContent>
       </Card>
@@ -154,11 +206,21 @@ const History: React.FC = () => {
                       <Typography variant="subtitle1" component="span">
                         {bet.description}
                       </Typography>
-                      <Chip
-                        label={bet.status === 'Won' ? 'Ganhou' : 'Perdeu'}
-                        color={getStatusColor(bet.status)}
-                        size="small"
-                      />
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                        <Chip
+                          label={bet.status === 'Won' ? 'Ganhou' : 'Perdeu'}
+                          color={getStatusColor(bet.status)}
+                          size="small"
+                        />
+                        <IconButton
+                          size="small"
+                          color="error"
+                          onClick={() => handleOpenDeleteDialog(bet.id)}
+                          title="Deletar aposta"
+                        >
+                          <DeleteIcon fontSize="small" />
+                        </IconButton>
+                      </Box>
                     </Box>
                   }
                   secondary={
@@ -198,6 +260,28 @@ const History: React.FC = () => {
           ))}
         </List>
       </Paper>
+
+      <Dialog
+        open={deleteDialogOpen}
+        onClose={handleCloseDeleteDialog}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+          Confirmar exclusão
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Tem certeza que deseja deletar esta aposta? Esta ação não pode ser desfeita.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDeleteDialog}>Cancelar</Button>
+          <Button onClick={handleConfirmDelete} color="error" variant="contained">
+            Deletar Permanentemente
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 };

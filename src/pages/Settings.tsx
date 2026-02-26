@@ -3,6 +3,7 @@ import { Box, Typography, Button, Dialog, DialogTitle, DialogContent, DialogActi
 import { useBetStore } from '../store/useBetStore';
 import { useBankStore } from '../store/useBankStore';
 import { useTheme } from '../contexts/ThemeContext';
+import { useProfileStore } from '../store/useProfileStore';
 
 const Settings: React.FC = () => {
   const [open, setOpen] = useState(false);
@@ -10,6 +11,7 @@ const Settings: React.FC = () => {
   const { clearBets } = useBetStore();
   const { clearTransactions } = useBankStore();
   const { isDarkMode, toggleTheme } = useTheme();
+  const { avatar, setAvatar, clearAvatar } = useProfileStore();
 
   const handleOpen = () => {
     setOpen(true);
@@ -25,6 +27,21 @@ const Settings: React.FC = () => {
     setOpen(false);
     setShowSuccess(true);
     setTimeout(() => setShowSuccess(false), 3000);
+  };
+
+  const handleAvatarChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files && event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      const result = reader.result as string;
+      setAvatar(result);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleRemoveAvatar = () => {
+    clearAvatar();
   };
 
   return (
@@ -46,6 +63,37 @@ const Settings: React.FC = () => {
               color="primary"
               size="medium"
             />
+          </Box>
+        </CardContent>
+      </Card>
+
+      <Card sx={{ mt: 3, mb: 3, backgroundColor: 'background.paper' }}>
+        <CardContent>
+          <Typography variant="h6" sx={{ fontWeight: 600, mb: 2 }}>
+            Foto de Perfil
+          </Typography>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+            {avatar ? (
+              <Box
+                component="img"
+                src={avatar}
+                alt="Avatar"
+                sx={{ width: 64, height: 64, borderRadius: '50%', objectFit: 'cover' }}
+              />
+            ) : (
+              <Box
+                sx={{ width: 64, height: 64, borderRadius: '50%', bgcolor: 'grey.300' }}
+              />
+            )}
+            <Button variant="contained" component="label">
+              {avatar ? 'Alterar' : 'Selecionar'}
+              <input type="file" hidden accept="image/*" onChange={handleAvatarChange} />
+            </Button>
+            {avatar && (
+              <Button color="error" onClick={handleRemoveAvatar}>
+                Remover
+              </Button>
+            )}
           </Box>
         </CardContent>
       </Card>

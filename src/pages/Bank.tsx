@@ -213,6 +213,11 @@ const Bank: React.FC = () => {
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
               fullWidth
+              inputProps={{
+                inputMode: 'decimal',
+                step: '0.01',
+                min: '0',
+              }}
               InputProps={{
                 startAdornment: 'R$',
               }}

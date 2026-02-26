@@ -15,6 +15,7 @@ import {
   useTheme,
   useMediaQuery,
 } from '@mui/material';
+import { useProfileStore } from '../store/useProfileStore';
 import {
   Menu as MenuIcon,
   Home as HomeIcon,
@@ -35,6 +36,7 @@ const MainLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const navigate = useNavigate();
   const location = useLocation();
+  const avatar = useProfileStore((state) => state.avatar);
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -54,9 +56,18 @@ const MainLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
       <Box>
         <Toolbar>
-          <Typography variant="h6" noWrap component="div">
-            Gestão de Apostas
-          </Typography>
+          <Box
+            component="img"
+            src={`${import.meta.env.BASE_URL}logo-bets.svg`}
+            alt="Logo"
+            sx={{
+              height: 40,
+              display: 'flex',
+              alignItems: 'center',
+              cursor: 'pointer',
+            }}
+            onClick={() => navigate('/')}
+          />
         </Toolbar>
         <List>
           {menuItems.map((item) => (
@@ -100,9 +111,26 @@ const MainLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
-            Gestão de Apostas
-          </Typography>
+          <Box
+            component="img"
+            src={`${import.meta.env.BASE_URL}logo-bets.svg`}
+            alt="Logo"
+            sx={{
+              height: 40,
+              cursor: 'pointer',
+            }}
+            onClick={() => navigate('/')}
+          />
+          {/* spacer pushes avatar to right */}
+          <Box sx={{ flexGrow: 1 }} />
+          {avatar && (
+            <Box
+              component="img"
+              src={avatar}
+              alt="Profile"
+              sx={{ width: 32, height: 32, borderRadius: '50%', ml: 2 }}
+            />
+          )}
         </Toolbar>
       </AppBar>
       <Box

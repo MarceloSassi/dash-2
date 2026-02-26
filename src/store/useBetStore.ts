@@ -16,6 +16,7 @@ interface BetStoreActions {
   addBet: (bet: Omit<Bet, 'id'>) => void;
   updateBetStatus: (id: string, status: BetStatus) => void;
   deleteBet: (id: string) => void;
+  resetBetToPending: (id: string) => void;
   getBetsByStatus: (status: BetStatus) => Bet[];
   getBetsBySport: (sport: Sport) => Bet[];
   getBetsByDateRange: (startDate: Date, endDate: Date) => Bet[];
@@ -132,9 +133,30 @@ export const useBetStore = create<BetStore>()(
           bets: state.bets.filter((bet) => bet.id !== id),
         }));
 
-        // Chama a ação do bankStore para potencialmente devolver o valor apostado
-        // Passa o status da aposta ANTES de ser deletada
-        useBankStore.getState().registerBetDeletedOrLost(betToDelete.amount, betToDelete.status);
+        // Restaura o saldo ao estado pré-inclusão da aposta
+        useBankStore.getState().restoreBetToPreInclusion(betToDelete.amount, betToDelete.status, betToDelete.odd);
+      },
+      resetBetToPending: (id) => {
+        const betToReset = get().bets.find((bet) => bet.id === id);
+        if (!betToReset) return; // Aposta não encontrada
+
+        // Atualiza o estado da aposta para Pending
+        set((state) => ({
+          bets: state.bets.map((bet) =>
+            bet.id === id ? { ...bet, status: 'Pending' as BetStatus } : bet
+          ),
+        }));
+
+        // Restaura ao estado pré-inclusão (não é pré-de-tudo, é pré-do-resultado)
+        // Se era ganha: remove o ganho
+        // Se era perdida: devolve o valor apostado
+        if (betToReset.status === 'Won') {
+          // Remove o ganho
+          useBankStore.getState().reverseBetWinnings(betToReset.amount, betToReset.odd);
+        } else if (betToReset.status === 'Lost') {
+          // Devolve o valor apostado
+          useBankStore.getState().registerBetDeletedOrLost(betToReset.amount, 'Lost');
+        }
       },
       getBetsByStatus: (status) => get().bets.filter((bet) => bet.status === status),
       getBetsBySport: (sport) => get().bets.filter((bet) => bet.sport === sport),

@@ -15,6 +15,8 @@ interface BankActions {
   registerBetPlaced: (amount: number) => void;
   registerBetWon: (returnedAmount: number) => void;
   registerBetDeletedOrLost: (stakedAmount: number, status: 'Pending' | 'Lost' | 'Won') => void;
+  reverseBetWinnings: (stakedAmount: number, odd: number) => void;
+  restoreBetToPreInclusion: (stakedAmount: number, previousStatus: 'Pending' | 'Lost' | 'Won', odd?: number) => void;
   getStats: () => BankStats;
 }
 
@@ -66,6 +68,32 @@ export const useBankStore = create<BankStore>()(
       },
       registerBetDeletedOrLost: (stakedAmount, status) => {
         if (status === 'Pending') {
+          // Aposta pendente: devolve o valor apostado
+          set((state) => ({ balance: state.balance + stakedAmount }));
+        } else if (status === 'Lost') {
+          // Aposta perdida: devolve o valor apostado (foi deduzido quando colocada)
+          set((state) => ({ balance: state.balance + stakedAmount }));
+        }
+        // Se status === 'Won': não faz nada aqui porque o ganho já foi contabilizado
+        // O usuário pode decidir se quer remover o ganho manualmente
+      },
+      reverseBetWinnings: (stakedAmount, odd) => {
+        // Remove apenas o ganho de uma aposta ganha
+        // Ganho = (valor_apostado * odd) - valor_apostado
+        const gainAmount = (stakedAmount * odd) - stakedAmount;
+        set((state) => ({ balance: state.balance - gainAmount }));
+      },
+      restoreBetToPreInclusion: (stakedAmount, previousStatus, odd) => {
+        // Restaura o saldo ao estado pré-inclusão da aposta
+        if (previousStatus === 'Won' && odd) {
+          // Aposta ganha: remove o ganho
+          const gainAmount = (stakedAmount * odd) - stakedAmount;
+          set((state) => ({ balance: state.balance - gainAmount }));
+        } else if (previousStatus === 'Lost') {
+          // Aposta perdida: devolve o valor apostado
+          set((state) => ({ balance: state.balance + stakedAmount }));
+        } else if (previousStatus === 'Pending') {
+          // Aposta pendente: devolve o valor apostado
           set((state) => ({ balance: state.balance + stakedAmount }));
         }
       },
