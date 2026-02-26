@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
-import { Box, Typography, Button, Dialog, DialogTitle, DialogContent, DialogActions, Alert } from '@mui/material';
+import { Box, Typography, Button, Dialog, DialogTitle, DialogContent, DialogActions, Alert, Card, CardContent, Switch } from '@mui/material';
 import { useBetStore } from '../store/useBetStore';
 import { useBankStore } from '../store/useBankStore';
+import { useTheme } from '../contexts/ThemeContext';
 
 const Settings: React.FC = () => {
   const [open, setOpen] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const { clearBets } = useBetStore();
   const { clearTransactions } = useBankStore();
+  const { isDarkMode, toggleTheme } = useTheme();
 
   const handleOpen = () => {
     setOpen(true);
@@ -26,24 +28,47 @@ const Settings: React.FC = () => {
   };
 
   return (
-    <Box sx={{ p: 3 }}>
+    <Box sx={{ p: { xs: 1, sm: 3 } }}>
       <Typography variant="h4" component="h1" gutterBottom>
         Configurações
       </Typography>
 
-      <Box sx={{ mt: 4 }}>
-        <Typography variant="h6" gutterBottom>
-          Gerenciamento de Dados
-        </Typography>
-        <Button
-          variant="contained"
-          color="error"
-          onClick={handleOpen}
-          sx={{ mt: 2 }}
-        >
-          Limpar Todos os Dados
-        </Button>
-      </Box>
+      <Card sx={{ mt: 4, mb: 3, backgroundColor: 'background.paper' }}>
+        <CardContent>
+          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <Typography variant="h6" sx={{ fontWeight: 600 }}>
+              Tema
+            </Typography>
+            
+            <Switch
+              checked={isDarkMode}
+              onChange={toggleTheme}
+              color="primary"
+              size="medium"
+            />
+          </Box>
+        </CardContent>
+      </Card>
+
+      <Card sx={{ mt: 3 }}>
+        <CardContent>
+          <Typography variant="h6" sx={{ fontWeight: 600, mb: 2 }}>
+            Gerenciamento de Dados
+          </Typography>
+          <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+            Cuidado! As ações abaixo são irreversíveis.
+          </Typography>
+          <Button
+            variant="contained"
+            color="error"
+            onClick={handleOpen}
+            size="large"
+            fullWidth
+          >
+            Limpar Todos os Dados
+          </Button>
+        </CardContent>
+      </Card>
 
       {showSuccess && (
         <Alert severity="success" sx={{ mt: 2 }}>
@@ -51,7 +76,17 @@ const Settings: React.FC = () => {
         </Alert>
       )}
 
-      <Dialog open={open} onClose={handleClose}>
+      <Dialog 
+        open={open} 
+        onClose={handleClose}
+        maxWidth="sm"
+        fullWidth
+        sx={{
+          '& .MuiDialog-paper': {
+            margin: { xs: 1, sm: 2 },
+          }
+        }}
+      >
         <DialogTitle>Confirmar Limpeza de Dados</DialogTitle>
         <DialogContent>
           <Typography>

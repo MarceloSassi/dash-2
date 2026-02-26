@@ -1,6 +1,6 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 import { ThemeProvider as MUIThemeProvider } from '@mui/material/styles';
-import theme from '../theme';
+import { lightTheme, darkTheme } from '../theme';
 
 interface ThemeContextType {
   isDarkMode: boolean;
@@ -22,15 +22,24 @@ interface ThemeProviderProps {
 }
 
 const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    const saved = localStorage.getItem('darkMode');
+    return saved !== null ? JSON.parse(saved) : false;
+  });
+
+  useEffect(() => {
+    localStorage.setItem('darkMode', JSON.stringify(isDarkMode));
+  }, [isDarkMode]);
 
   const toggleTheme = () => {
     setIsDarkMode(!isDarkMode);
   };
 
+  const currentTheme = isDarkMode ? darkTheme : lightTheme;
+
   return (
     <ThemeContext.Provider value={{ isDarkMode, toggleTheme }}>
-      <MUIThemeProvider theme={theme}>
+      <MUIThemeProvider theme={currentTheme}>
         {children}
       </MUIThemeProvider>
     </ThemeContext.Provider>

@@ -7,7 +7,6 @@ import {
   TextField,
   MenuItem,
   Button,
-  Container,
   Grid,
 } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
@@ -70,8 +69,8 @@ const AddBet: React.FC = () => {
   };
 
   return (
-    <Container maxWidth="md">
-      <Box sx={{ py: 2 }}>
+    <Box sx={{ maxWidth: { xs: '100%', md: 900 }, margin: '0 auto' }}>
+      <Box sx={{ py: { xs: 1, sm: 2 } }}>
         <Typography variant="h4" component="h1" gutterBottom>
           Nova Aposta
         </Typography>
@@ -83,7 +82,7 @@ const AddBet: React.FC = () => {
       <Card>
         <CardContent>
           <form onSubmit={handleSubmit}>
-            <Grid container spacing={3}>
+            <Grid container spacing={{ xs: 1.5, sm: 3 }}>
               <Grid item xs={12} sm={6}>
                 <TextField
                   select
@@ -176,7 +175,7 @@ const AddBet: React.FC = () => {
           </form>
         </CardContent>
       </Card>
-    </Container>
+    </Box>
   );
 };
 

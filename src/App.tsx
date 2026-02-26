@@ -7,6 +7,7 @@ import History from './pages/History';
 import Statistics from './pages/Statistics';
 import AddBet from './pages/AddBet';
 import Bank from './pages/Bank';
+import Settings from './pages/Settings';
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
             <Route path="/statistics" element={<Statistics />} />
             <Route path="/add-bet" element={<AddBet />} />
             <Route path="/bank" element={<Bank />} />
+            <Route path="/settings" element={<Settings />} />
           </Routes>
         </MainLayout>
       </Router>

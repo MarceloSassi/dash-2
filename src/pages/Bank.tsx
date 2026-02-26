@@ -97,8 +97,8 @@ const Bank: React.FC = () => {
   ];
 
   return (
-    <Box sx={{ p: 2 }}>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+    <Box sx={{ p: { xs: 1, sm: 2 } }}>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3, flexDirection: { xs: 'column', sm: 'row' }, gap: { xs: 2, sm: 0 } }}>
         <Typography variant="h4" component="h1">
           Banco
         </Typography>
@@ -111,7 +111,7 @@ const Bank: React.FC = () => {
         </Button>
       </Box>
 
-      <Grid container spacing={3} sx={{ mb: 4 }}>
+      <Grid container spacing={{ xs: 1.5, sm: 3 }} sx={{ mb: 4 }}>
         {cards.map((card, index) => (
           <Grid item xs={12} sm={6} md={3} key={index}>
             <Card>
@@ -183,7 +183,17 @@ const Bank: React.FC = () => {
         </CardContent>
       </Card>
 
-      <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
+      <Dialog 
+        open={openDialog} 
+        onClose={() => setOpenDialog(false)}
+        maxWidth="sm"
+        fullWidth
+        sx={{
+          '& .MuiDialog-paper': {
+            margin: { xs: 1, sm: 2 },
+          }
+        }}
+      >
         <DialogTitle>Nova Transação</DialogTitle>
         <DialogContent>
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, pt: 2 }}>

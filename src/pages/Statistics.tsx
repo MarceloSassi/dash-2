@@ -4,7 +4,6 @@ import {
   Card,
   CardContent,
   Typography,
-  Container,
   Grid,
   FormControl,
   InputLabel,
@@ -135,8 +134,8 @@ const Statistics: React.FC = () => {
   };
 
   return (
-    <Container maxWidth="xl" sx={{ py: 1 }}>
-      <Box sx={{ mb: 2 }}>
+    <Box sx={{ maxWidth: { xs: '100%', xl: 1280 }, margin: '0 auto', py: { xs: 0.5, sm: 1 } }}>
+      <Box sx={{ mb: 2, px: { xs: 1, sm: 0 } }}>
         <Typography variant="h4" component="h1" gutterBottom>
           Estatísticas
         </Typography>
@@ -189,7 +188,7 @@ const Statistics: React.FC = () => {
         </CardContent>
       </Card>
 
-      <Grid container spacing={2} sx={{ mb: 2 }}>
+      <Grid container spacing={{ xs: 1, sm: 2 }} sx={{ mb: 2 }}>
         <Grid item xs={12} sm={6} md={3}>
           <Card sx={{ height: '100%' }}>
             <CardContent>
@@ -252,7 +251,7 @@ const Statistics: React.FC = () => {
         </Grid>
       </Grid>
 
-      <Grid container spacing={2}>
+      <Grid container spacing={{ xs: 1, sm: 2 }}>
         <Grid item xs={12} md={6}>
           <Card sx={{ height: '100%' }}>
             <CardContent>
@@ -406,7 +405,7 @@ const Statistics: React.FC = () => {
           </Card>
         </Grid>
       </Grid>
-    </Container>
+    </Box>
   );
 };
 

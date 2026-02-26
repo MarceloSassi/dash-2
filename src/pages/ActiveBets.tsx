@@ -66,7 +66,7 @@ const ActiveBets: React.FC = () => {
   };
 
   return (
-    <Box sx={{ p: 2 }}>
+    <Box sx={{ p: { xs: 1, sm: 2 } }}>
       <Typography variant="h4" component="h1" gutterBottom>
         Apostas Ativas
       </Typography>
@@ -82,7 +82,7 @@ const ActiveBets: React.FC = () => {
           display: 'flex', 
           flexDirection: { xs: 'column', sm: 'row' },
           flexWrap: 'wrap',
-          gap: 3,
+          gap: { xs: 1.5, sm: 3 },
           '& > *': {
             flex: { xs: '1 1 100%', sm: '1 1 calc(50% - 12px)', md: '1 1 calc(33.333% - 16px)' }
           }
@@ -143,7 +143,17 @@ const ActiveBets: React.FC = () => {
         </Box>
       )}
 
-      <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
+      <Dialog 
+        open={openDialog} 
+        onClose={() => setOpenDialog(false)}
+        maxWidth="sm"
+        fullWidth
+        sx={{
+          '& .MuiDialog-paper': {
+            margin: { xs: 1, sm: 2 },
+          }
+        }}
+      >
         <DialogTitle>
           Confirmar {selectedBet?.status === 'Won' ? 'Vitória' : 'Derrota'}
         </DialogTitle>

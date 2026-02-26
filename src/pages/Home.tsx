@@ -62,7 +62,7 @@ const Home: React.FC = () => {
   };
 
   return (
-    <Box sx={{ p: 3 }}>
+    <Box sx={{ p: { xs: 1, sm: 3 } }}>
       <Typography variant="h4" component="h1" gutterBottom>
         Painel de Controle
       </Typography>
@@ -70,7 +70,7 @@ const Home: React.FC = () => {
         Bem-vindo ao seu painel de gerenciamento de apostas.
       </Typography>
 
-      <Grid container spacing={3}>
+      <Grid container spacing={{ xs: 1.5, sm: 3 }}>
         {cards.map((card, index) => (
           <Grid item xs={12} sm={6} md={4} key={index}>
             <Card 

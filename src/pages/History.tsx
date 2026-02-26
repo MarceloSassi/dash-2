@@ -79,7 +79,7 @@ const History: React.FC = () => {
   };
 
   return (
-    <Box sx={{ p: 2 }}>
+    <Box sx={{ p: { xs: 1, sm: 2 } }}>
       <Typography variant="h4" component="h1" gutterBottom>
         Histórico de Apostas
       </Typography>
@@ -93,9 +93,9 @@ const History: React.FC = () => {
             display: 'flex', 
             flexDirection: { xs: 'column', sm: 'row' },
             flexWrap: 'wrap',
-            gap: 2,
+            gap: { xs: 1, sm: 2 },
             '& > *': {
-              flex: { xs: '1 1 100%', sm: '1 1 calc(50% - 8px)', md: '1 1 calc(25% - 8px)' }
+              flex: { xs: '1 1 100%', sm: '1 1 calc(50% - 4px)', md: '1 1 calc(25% - 4px)' }
             }
           }}>
             <LocalizationProvider dateAdapter={AdapterDateFns}>
@@ -143,7 +143,7 @@ const History: React.FC = () => {
         </CardContent>
       </Card>
 
-      <Paper sx={{ maxHeight: 'calc(100vh - 300px)', overflow: 'auto' }}>
+      <Paper sx={{ maxHeight: 'calc(100vh - 300px)', overflowY: 'auto', overflowX: 'hidden' }}>
         <List>
           {filteredBets.map((bet, index) => (
             <React.Fragment key={bet.id}>
