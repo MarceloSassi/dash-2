@@ -45,7 +45,7 @@ const validateAndParseBet = (bet: any): Bet | null => {
       typeof bet.sport === 'string' &&
       ['Soccer', 'Basketball', 'Tennis', 'Volleyball', 'Other'].includes(bet.sport) &&
       typeof bet.betType === 'string' &&
-      ['Single', 'Multiple'].includes(bet.betType) &&
+      ['Resultado', 'Gols', 'Handicap', 'Escanteios', 'Cartões', 'Jogadores', 'Por Tempo', 'Especiais'].includes(bet.betType) &&
       typeof bet.odd === 'number' && bet.odd > 0 &&
       typeof bet.amount === 'number' && bet.amount > 0 &&
       typeof bet.status === 'string' &&

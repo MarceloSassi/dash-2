@@ -8,6 +8,8 @@ import {
   MenuItem,
   Button,
   Grid,
+  Snackbar,
+  Alert,
 } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -25,6 +27,7 @@ const AddBet: React.FC = () => {
     date: new Date(),
     description: '',
   });
+  const [openSnackbar, setOpenSnackbar] = useState(false);
 
   const handleChange = (field: string) => (event: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -57,6 +60,9 @@ const AddBet: React.FC = () => {
 
     useBetStore.getState().addBet(newBet);
 
+    // Show success message
+    setOpenSnackbar(true);
+
     // Reset form
     setFormData({
       sport: '' as Sport,
@@ -66,6 +72,10 @@ const AddBet: React.FC = () => {
       date: new Date(),
       description: '',
     });
+  };
+
+  const handleCloseSnackbar = () => {
+    setOpenSnackbar(false);
   };
 
   return (
@@ -109,8 +119,14 @@ const AddBet: React.FC = () => {
                   onChange={handleChange('betType')}
                   required
                 >
-                  <MenuItem value="Single">Simples</MenuItem>
-                  <MenuItem value="Multiple">Múltipla</MenuItem>
+                  <MenuItem value="Resultado">Resultado</MenuItem>
+                  <MenuItem value="Gols">Gols</MenuItem>
+                  <MenuItem value="Handicap">Handicap</MenuItem>
+                  <MenuItem value="Escanteios">Escanteios</MenuItem>
+                  <MenuItem value="Cartões">Cartões</MenuItem>
+                  <MenuItem value="Jogadores">Jogadores</MenuItem>
+                  <MenuItem value="Por Tempo">Por Tempo</MenuItem>
+                  <MenuItem value="Especiais">Especiais</MenuItem>
                 </TextField>
               </Grid>
 
@@ -122,7 +138,7 @@ const AddBet: React.FC = () => {
                   value={formData.amount}
                   onChange={handleChange('amount')}
                   required
-                  inputProps={{ min: "0.01", step: "0.01" }}
+                  inputProps={{ min: "0.01", step: "0.01", inputMode: "decimal" }}
                 />
               </Grid>
 
@@ -134,7 +150,7 @@ const AddBet: React.FC = () => {
                   value={formData.odd}
                   onChange={handleChange('odd')}
                   required
-                  inputProps={{ min: "1.01", step: "0.01" }}
+                  inputProps={{ min: "1.01", step: "0.01", inputMode: "decimal" }}
                 />
               </Grid>
 
@@ -175,6 +191,17 @@ const AddBet: React.FC = () => {
           </form>
         </CardContent>
       </Card>
+
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={2000}
+        onClose={handleCloseSnackbar}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+      >
+        <Alert onClose={handleCloseSnackbar} severity="success" sx={{ width: '100%' }}>
+          Aposta adicionada com sucesso!
+        </Alert>
+      </Snackbar>
     </Box>
   );
 };

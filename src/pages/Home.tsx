@@ -54,11 +54,7 @@ const Home: React.FC = () => {
   };
 
   const getBetTypeName = (type: string) => {
-    switch (type) {
-      case 'Single': return 'Simples';
-      case 'Multiple': return 'Múltipla';
-      default: return type;
-    }
+    return type;
   };
 
   return (

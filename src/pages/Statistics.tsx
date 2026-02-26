@@ -117,6 +117,17 @@ const Statistics: React.FC = () => {
     return acc;
   }, [] as { id: string; label: string; value: number }[]);
 
+  // Prepare data for bet type distribution pie chart
+  const betTypeDistribution = bets.reduce((acc, bet) => {
+    const existingType = acc.find((entry) => entry.id === bet.betType);
+    if (existingType) {
+      existingType.value += 1;
+    } else {
+      acc.push({ id: bet.betType, label: bet.betType, value: 1 });
+    }
+    return acc;
+  }, [] as { id: string; label: string; value: number }[]);
+
   // Cálculo da odd média
   const averageOdd = bets.length > 0
     ? bets.reduce((sum, bet) => sum + bet.odd, 0) / bets.length
@@ -377,6 +388,51 @@ const Statistics: React.FC = () => {
                     <Box sx={{ bgcolor: 'background.paper', p: 1, borderRadius: 1 }}>
                       <Typography variant="body2">
                         {getSportName(datum.id.toString())}: {datum.value} apostas
+                      </Typography>
+                    </Box>
+                  )}
+                />
+              </Box>
+            </CardContent>
+          </Card>
+        </Grid>
+
+        <Grid item xs={12} md={6}>
+          <Card sx={{ height: '100%' }}>
+            <CardContent>
+              <Typography variant="h6" gutterBottom>
+                Distribuição por Tipo de Aposta
+              </Typography>
+              <Box sx={{ height: 200 }}>
+                <ResponsivePie
+                  data={betTypeDistribution}
+                  margin={{ top: 20, right: 20, bottom: 20, left: 20 }}
+                  innerRadius={0.5}
+                  padAngle={0.7}
+                  cornerRadius={3}
+                  activeOuterRadiusOffset={8}
+                  colors={[
+                    '#E8F5E9',
+                    '#C8E6C9',
+                    '#A5D6A7',
+                    '#81C784',
+                    '#66BB6A',
+                    '#43A047',
+                    '#2E7D32',
+                    '#1B5E20',
+                  ]}
+                  borderWidth={1}
+                  borderColor={{ from: 'color', modifiers: [['darker', 0.2]] }}
+                  arcLinkLabelsSkipAngle={10}
+                  arcLinkLabelsTextColor={theme.palette.text.primary}
+                  arcLinkLabelsThickness={2}
+                  arcLinkLabelsColor={{ from: 'color' }}
+                  arcLabelsSkipAngle={10}
+                  arcLabelsTextColor={{ from: 'color', modifiers: [['darker', 2]] }}
+                  tooltip={({ datum }) => (
+                    <Box sx={{ bgcolor: 'background.paper', p: 1, borderRadius: 1 }}>
+                      <Typography variant="body2">
+                        {datum.label}: {datum.value} apostas
                       </Typography>
                     </Box>
                   )}
